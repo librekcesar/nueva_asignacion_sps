@@ -216,7 +216,7 @@
 
         function onEachFeature(feature, layer) {
             if (feature.properties) {
-                layer.bindPopup('<p> Código de estación: ' + feature.properties.station_code + '</p><p>Nombre del proveedor: ' + feature.properties.ACTUAL + '</p><p>Zonificación: ' + feature.properties.station_name  + '</p><p>Localidad: ' + feature.properties.country + '</p>');
+                layer.bindPopup('<p> Código de estación: ' + feature.properties.station_code + '</p><p>Nombre del proveedor: ' + feature.properties.ACTUAL + '</p><p>Nombre de estación: ' + feature.properties.station_name  + '</p><p>País: ' + feature.properties.country + '</p>');
             }
         }
 
@@ -259,7 +259,7 @@
 
         function onEachFeature2(feature, layer) {
             if (feature.properties) {
-                layer.bindPopup('<p> Código de estación: ' + feature.properties.station_code + '</p><p>Nombre del proveedor: ' + feature.properties.SELECCIONADO + '</p><p>Zonificación: ' + feature.properties.station_name  + '</p><p>Localidad: ' + feature.properties.country + '</p>');
+                layer.bindPopup('<p> Código de estación: ' + feature.properties.station_code + '</p><p>Nombre del proveedor: ' + feature.properties.SELECCIONADO + '</p><p>Nombre de estación: ' + feature.properties.station_name  + '</p><p>País: ' + feature.properties.country + '</p>');
             }
         }
 
