@@ -15,6 +15,7 @@
     
     <script type="text/javascript" src="poligonos_station_v93_copia.js"></script>
     <script type="text/javascript" src="poligonos_station_v93_copia2.js"></script>
+    <script type="text/javascript" src="poligonos_station_v93_copia3.js"></script>
     
     
 
@@ -36,16 +37,34 @@
             z-index: 1000;
         }
 
-        .leaflet-control-search {
-            font-family: Arial, sans-serif;
-            font-size: 14px;
-        }
+       
 
         /* ESTILOS DE LA LEYENDA MODIFICADOS */
         #map-legend {
             position: absolute;
             bottom: 20px;
             right: 20px;
+            background: white;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            line-height: 1.5em;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            
+            /* Agregamos las propiedades para el scroll */
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        /*segunda leyenda*/
+
+         #map-legend2 {
+            position: absolute;
+            bottom: 20px;
+            right: 1000px;
             background: white;
             padding: 10px;
             border: 1px solid #ccc;
@@ -147,6 +166,18 @@
         </div>
     </div>
 
+    <div id="map-legend2" class="legend">
+        <h4>Simbología planes de acción</h4>
+            <div><span style="background-color: #A9F527; width: 20px; height: 20px; display: inline-block; border-radius: 50%;"></span> Categoría 1: Incremento de zonas</div>
+            <div><span style="background-color: #40CBDB; width: 20px; height: 20px; display: inline-block; border-radius: 50%;"></span> Categoría 2: Buen Performace</div>
+            <div><span style="background-color: #D9C40B; width: 20px; height: 20px; display: inline-block; border-radius: 50%;"></span> Categoría 3: Seguimiento - Retroalimentacion formal</div>
+            <div><span style="background-color: #CF8C08; width: 20px; height: 20px; display: inline-block; border-radius: 50%;"></span> Categoría 4: Warning + Plan de accion de proveedor documentado</div>
+            <div><span style="background-color: #C21B08; width: 20px; height: 20px; display: inline-block; border-radius: 50%;"></span> Categoría 5: Baja / Ajuste cobertura</div>
+            <div><span style="background-color: #666262; width: 20px; height: 20px; display: inline-block; border-radius: 50%;"></span> Categoría 5: Sin acción</div>
+
+        
+    </div>
+
     <script>
         var map = L.map("map").setView([19.466094, -99.1392], 11);
         L.tileLayer("http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -242,7 +273,7 @@
                 case 'LOGISTICA EN MOVIMIENTO': return '#7266f2ad';
                 case 'LOTO': return '#07a5b0';
                 case 'TUMI': return '#d0aadca7';
-                case 'TERCAM': return '#ece804';    
+                case 'TERCAM': return '#ece804';
                 default: return 'black';
             }
         }
@@ -270,7 +301,48 @@
         });
 
         ////////////////
-        ////
+        //tercera capa
+    function getColor3(ACC_CATEG) {
+            switch (ACC_CATEG) {
+                case '1. Incremento de zonas': return '#A9F527';
+                case '2. Buen Performace': return '#40CBDB';
+                case '3. Seguimiento - Retroalimentacion formal': return '#D9C40B';
+                case '4. Warning + Plan de accion de proveedor documentado.': return '#CF8C08';
+                case '5. Baja / Ajuste cobertura': return '#C21B08';
+                case 'Sin acción': return '#666262';
+            
+                default: return 'black';
+            }
+        }
+
+        function style3(feature) {
+            return {
+                fillColor: getColor3(feature.properties.ACC_CATEG),
+                weight: 1,
+                opacity: 1,
+                color: 'black',
+                dashArray: '2',
+                fillOpacity: 0.5
+            };
+        }
+
+        function onEachFeature3(feature, layer) {
+            if (feature.properties) {
+                layer.bindPopup('<p> Código de estación: ' + feature.properties.station_code + '</p><p>Nombre del proveedor actual: ' + feature.properties.ACTUAL + '</p><p>Nombre de estación: ' + feature.properties.station_name  + '</p><p>Acción: ' + feature.properties.ACC_CATEG + '</p>');
+            }
+        }
+
+        var layerGroup3 = L.geoJSON(acciones, {
+            style: style3,
+            onEachFeature: onEachFeature3
+        });
+    
+
+
+
+
+
+        ////fin tercera capa
 
         var baseMaps = {
             "Mapa Base": map
@@ -278,7 +350,8 @@
 
         var overlayMaps = {
             "Asignación de SP´s actual": layerGroup,
-            "Asignación de SP´s propuesta": layerGroup2
+            "Asignación de SP´s propuesta": layerGroup2,
+            "Planes de acción": layerGroup3
         };
 
         L.control.layers(baseMaps, overlayMaps, {
